@@ -4,11 +4,15 @@ version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "cloudpathlib>=0.21.0",
 ]
 
 [project.optional-dependencies]
 image = [
     "pillow>=11.1.0",
+]
+s3 = [
+    "cloudpathlib[s3]>=0.21.0",
 ]
 
 [dependency-groups]

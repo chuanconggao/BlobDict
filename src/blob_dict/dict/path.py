@@ -3,6 +3,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import override
 
+from cloudpathlib import CloudPath
+
 from ..blob import BytesBlob
 from . import BlobDictBase
 
@@ -13,10 +15,10 @@ class LocalPath(Path):
 
 
 class PathBlobDict(BlobDictBase):
-    def __init__(self, path: LocalPath) -> None:
+    def __init__(self, path: LocalPath | CloudPath) -> None:
         super().__init__()
 
-        self.__path: LocalPath = path
+        self.__path: LocalPath | CloudPath = path
 
     def create(self) -> None:
         self.__path.mkdir(
@@ -52,10 +54,19 @@ class PathBlobDict(BlobDictBase):
 
     @override
     def __iter__(self) -> Iterator[str]:
+        # The concept of relative path does not exist for `CloudPath`,
+        # and each walked path is always absolute for `CloudPath`.
+        # Therefore, we extract each key by removing the path prefix.
+        # In this way, the same logic works for both absolute and relative path.
+        prefix_len: int = (
+            len(str(self.__path))
+            # Extra 1 is for separator `/` between prefix and filename
+            + 1
+        )
+
         for parent, _, files in self.__path.walk(top_down=False):
-            parent = parent.relative_to(self.__path)
             for filename in files:
-                yield str(parent / filename)
+                yield str(parent / filename)[prefix_len:]
 
     @override
     def clear(self) -> None:
