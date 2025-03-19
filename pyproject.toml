@@ -6,6 +6,11 @@ requires-python = ">=3.13"
 dependencies = [
 ]
 
+[project.optional-dependencies]
+image = [
+    "pillow>=11.1.0",
+]
+
 [dependency-groups]
 dev = [
     "ipython>=9.0.2",
