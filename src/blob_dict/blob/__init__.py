@@ -7,6 +7,9 @@ class BytesBlob:
 
         self._blob_bytes: bytes = blob
 
+    def as_blob(self, blob_class: type[BytesBlob]) -> BytesBlob:
+        return blob_class(self._blob_bytes)
+
     def as_bytes(self) -> bytes:
         return self._blob_bytes
 
