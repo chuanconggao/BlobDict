@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, override
 
 from pydantic import BaseModel
 
@@ -17,6 +17,10 @@ class JsonDictBlob(StrBlob):
 
     def as_dict(self) -> dict[str, Any]:
         return json.loads(self._blob_bytes)
+
+    @override
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_dict().__repr__()})"
 
 
 class JsonModelBlob(JsonDictBlob):
@@ -47,3 +51,6 @@ class JsonModelBlob(JsonDictBlob):
     def as_model(self) -> BaseModel:
         return self.__model_class.model_validate_json(self._blob_bytes)
 
+    @override
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_model().__repr__()})"

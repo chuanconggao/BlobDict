@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from io import BytesIO
+from typing import override
 
 from PIL.Image import Image
 from PIL.Image import open as open_image
@@ -20,3 +21,7 @@ class ImageBlob(BytesBlob):
 
     def as_image(self) -> Image:
         return open_image(self._blob_bytes)
+
+    @override
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_image().__repr__()})"

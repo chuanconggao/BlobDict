@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import override
+
 
 class BytesBlob:
     def __init__(self, blob: bytes) -> None:
@@ -13,6 +15,9 @@ class BytesBlob:
     def as_bytes(self) -> bytes:
         return self._blob_bytes
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_bytes().__repr__()})"
+
 
 class StrBlob(BytesBlob):
     def __init__(self, blob: bytes | str) -> None:
@@ -23,3 +28,10 @@ class StrBlob(BytesBlob):
 
     def as_str(self) -> str:
         return self._blob_bytes.decode()
+
+    def __str__(self) -> str:
+        return self.as_str()
+
+    @override
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_str().__repr__()})"
