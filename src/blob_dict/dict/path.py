@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import override
 
 from cloudpathlib import CloudPath
+from simple_zstd import compress, decompress
 
 from ..blob import BytesBlob
 from . import BlobDictBase
@@ -15,10 +16,17 @@ class LocalPath(Path):
 
 
 class PathBlobDict(BlobDictBase):
-    def __init__(self, path: LocalPath | CloudPath) -> None:
+    def __init__(
+        self,
+        path: LocalPath | CloudPath,
+        *,
+        compression: bool = False,
+    ) -> None:
         super().__init__()
 
         self.__path: LocalPath | CloudPath = path
+
+        self.__compression: bool = compression
 
     def create(self) -> None:
         self.__path.mkdir(
@@ -42,7 +50,10 @@ class PathBlobDict(BlobDictBase):
         if key not in self:
             return default
 
-        return BytesBlob((self.__path / key).read_bytes())
+        blob_bytes: bytes = (self.__path / key).read_bytes()
+        if self.__compression:
+            blob_bytes = decompress(blob_bytes)
+        return BytesBlob(blob_bytes)
 
     @override
     def __getitem__(self, key: str) -> BytesBlob:
@@ -108,4 +119,7 @@ class PathBlobDict(BlobDictBase):
             exist_ok=True,
         )
 
-        (self.__path / key).write_bytes(blob.as_bytes())
+        blob_bytes: bytes = blob.as_bytes()
+        if self.__compression:
+            blob_bytes = compress(blob_bytes)
+        (self.__path / key).write_bytes(blob_bytes)

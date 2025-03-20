@@ -6,6 +6,7 @@ requires-python = ">=3.13"
 dependencies = [
     "cloudpathlib>=0.21.0",
     "pydantic>=2.10.6",
+    "simple-zstd>=0.1.0",
 ]
 
 [project.optional-dependencies]
