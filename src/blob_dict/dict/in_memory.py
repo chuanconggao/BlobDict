@@ -6,10 +6,13 @@ from . import BlobDictBase
 
 
 class InMemoryBlobDict(BlobDictBase):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        data_dict: dict[str, BytesBlob] | None = None,
+    ) -> None:
         super().__init__()
 
-        self.__dict: dict[str, BytesBlob] = {}
+        self.__dict: dict[str, BytesBlob] = {} if data_dict is None else data_dict
 
     @override
     def __len__(self) -> int:
