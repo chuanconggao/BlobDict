@@ -1,7 +1,7 @@
 import shutil
 from collections.abc import Iterator
 from pathlib import Path
-from typing import override
+from typing import Any, override
 
 from cloudpathlib import CloudPath
 from simple_zstd import compress, decompress
@@ -22,12 +22,17 @@ class PathBlobDict(BlobDictBase):
         path: LocalPath | CloudPath,
         *,
         compression: bool = False,
+        blob_class: type[BytesBlob] = BytesBlob,
+        blob_class_args: dict[str, Any] | None = None,
     ) -> None:
         super().__init__()
 
         self.__path: LocalPath | CloudPath = path
 
         self.__compression: bool = compression
+
+        self.__blob_class: type[BytesBlob] = blob_class
+        self.__blob_class_args: dict[str, Any] = blob_class_args or {}
 
     def create(self) -> None:
         self.__path.mkdir(
@@ -80,7 +85,7 @@ class PathBlobDict(BlobDictBase):
             ):
                 return StrBlob
             case _:
-                return BytesBlob
+                return self.__blob_class
 
     @override
     def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
@@ -90,7 +95,7 @@ class PathBlobDict(BlobDictBase):
         blob_bytes: bytes = (self.__path / key).read_bytes()
         if self.__compression:
             blob_bytes = decompress(blob_bytes)
-        return self.__get_blob_class(key)(blob_bytes)
+        return self.__get_blob_class(key)(blob_bytes, **self.__blob_class_args)
 
     @override
     def __iter__(self) -> Iterator[str]:
@@ -141,8 +146,15 @@ class PathBlobDict(BlobDictBase):
 
         self.__cleanup(key)
 
+    __BAD_BLOB_CLASS_ERROR_MESSAGE: str = "Must specify blob that is instance of {blob_class}"
+
     @override
     def __setitem__(self, key: str, blob: BytesBlob) -> None:
+        if not isinstance(blob, self.__blob_class):
+            raise TypeError(PathBlobDict.__BAD_BLOB_CLASS_ERROR_MESSAGE.format(
+                blob_class=self.__blob_class,
+            ))
+
         (self.__path / key).parent.mkdir(
             parents=True,
             exist_ok=True,
