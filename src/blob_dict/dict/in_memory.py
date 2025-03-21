@@ -27,14 +27,6 @@ class InMemoryBlobDict(BlobDictBase):
         return self.__dict.get(key, default)
 
     @override
-    def __getitem__(self, key: str) -> BytesBlob:
-        blob: BytesBlob | None = self.get(key)
-        if blob is None:
-            raise KeyError
-
-        return blob
-
-    @override
     def __iter__(self) -> Iterator[str]:
         yield from (
             key for key in self.__dict

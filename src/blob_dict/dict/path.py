@@ -38,10 +38,6 @@ class PathBlobDict(BlobDictBase):
         self.__path.rmtree()
 
     @override
-    def __len__(self) -> int:
-        return sum(1 for _ in self)
-
-    @override
     def __contains__(self, key: str) -> bool:
         return (self.__path / key).is_file()
 
@@ -54,14 +50,6 @@ class PathBlobDict(BlobDictBase):
         if self.__compression:
             blob_bytes = decompress(blob_bytes)
         return BytesBlob(blob_bytes)
-
-    @override
-    def __getitem__(self, key: str) -> BytesBlob:
-        blob: BytesBlob | None = self.get(key)
-        if blob is None:
-            raise KeyError
-
-        return blob
 
     @override
     def __iter__(self) -> Iterator[str]:

@@ -9,9 +9,8 @@ if TYPE_CHECKING:
 
 
 class ImmutableBlobDictBase(ABC):
-    @abstractmethod
     def __len__(self) -> int:
-        ...
+        return sum(1 for _ in self)
 
     @abstractmethod
     def __contains__(self, key: str) -> bool:
@@ -21,9 +20,12 @@ class ImmutableBlobDictBase(ABC):
     def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
         ...
 
-    @abstractmethod
     def __getitem__(self, key: str) -> BytesBlob:
-        ...
+        blob: BytesBlob | None = self.get(key)
+        if blob is None:
+            raise KeyError
+
+        return blob
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
