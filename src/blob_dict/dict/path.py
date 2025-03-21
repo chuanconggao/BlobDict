@@ -6,7 +6,8 @@ from typing import override
 from cloudpathlib import CloudPath
 from simple_zstd import compress, decompress
 
-from ..blob import BytesBlob
+from ..blob import BytesBlob, StrBlob
+from ..blob.json import JsonDictBlob
 from . import BlobDictBase
 
 
@@ -41,6 +42,46 @@ class PathBlobDict(BlobDictBase):
     def __contains__(self, key: str) -> bool:
         return (self.__path / key).is_file()
 
+    def __get_blob_class(self, key: str) -> type[BytesBlob]:
+        match (self.__path / key).suffix.lower():
+            case ".json":
+                return JsonDictBlob
+            case ".png":
+                # Import here as it has optional dependency
+                from ..blob.image import ImageBlob  # noqa: PLC0415
+
+                return ImageBlob
+            # Common text file extensions
+            # https://en.wikipedia.org/wiki/List_of_file_formats
+            case (
+                ".asc"
+                | ".bib"
+                | ".cfg"
+                | ".cnf"
+                | ".conf"
+                | ".csv"
+                | ".diff"
+                | ".htm"
+                | ".html"
+                | ".ini"
+                | ".log"
+                | ".markdown"
+                | ".md"
+                | ".tex"
+                | ".text"
+                | ".toml"
+                | ".tsv"
+                | ".txt"
+                | ".xhtml"
+                | ".xht"
+                | ".xml"
+                | ".yaml"
+                | ".yml"
+            ):
+                return StrBlob
+            case _:
+                return BytesBlob
+
     @override
     def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
         if key not in self:
@@ -49,7 +90,7 @@ class PathBlobDict(BlobDictBase):
         blob_bytes: bytes = (self.__path / key).read_bytes()
         if self.__compression:
             blob_bytes = decompress(blob_bytes)
-        return BytesBlob(blob_bytes)
+        return self.__get_blob_class(key)(blob_bytes)
 
     @override
     def __iter__(self) -> Iterator[str]:
