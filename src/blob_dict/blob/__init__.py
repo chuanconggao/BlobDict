@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from base64 import b64decode, b64encode
 from typing import override
 
 
@@ -14,6 +15,13 @@ class BytesBlob:
 
     def as_bytes(self) -> bytes:
         return self._blob_bytes
+
+    @staticmethod
+    def from_b64_str(blob: str) -> BytesBlob:
+        return BytesBlob(b64decode(blob))
+
+    def as_b64_str(self) -> str:
+        return b64encode(self._blob_bytes).decode("ascii")
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.as_bytes().__repr__()})"
