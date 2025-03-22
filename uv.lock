@@ -28,6 +28,7 @@ dependencies = [
     { name = "cloudpathlib" },
     { name = "pydantic" },
     { name = "simple-zstd" },
+    { name = "time-to-live-dict" },
 ]
 
 [package.optional-dependencies]
@@ -52,6 +53,7 @@ requires-dist = [
     { name = "pillow", marker = "extra == 'image'", specifier = ">=11.1.0" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "simple-zstd", specifier = ">=0.1.0" },
+    { name = "time-to-live-dict", specifier = ">=0.1.1" },
 ]
 provides-extras = ["image", "s3"]
 
@@ -523,6 +525,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/28/e3/55dcc2cfbc3ca9c29519eb6884dd1415ecb53b0e934862d3559ddcb7e20b/stack_data-0.6.3.tar.gz", hash = "sha256:836a778de4fec4dcd1dcd89ed8abff8a221f58308462e1c4aa2a3cf30148f0b9", size = 44707 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/7b/ce1eafaf1a76852e2ec9b22edecf1daa58175c090266e9f6c64afcd81d91/stack_data-0.6.3-py3-none-any.whl", hash = "sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695", size = 24521 },
+]
+
+[[package]]
+name = "time-to-live-dict"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a6/02/36e39a6e6da3b9f6ffa54675571ca58e0a6d6c3ff7065ab2b598c746bc26/time_to_live_dict-0.1.1.tar.gz", hash = "sha256:37180e10a4fa447dec56e9e80abd8465749a00ad5dd67b0201fe1e7d72b87447", size = 40692 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4f/54/5a4b6056ff4a8b135e9e25f24a11f60348811e5475b54790b54ae7723950/time_to_live_dict-0.1.1-py3-none-any.whl", hash = "sha256:7324628408663ae3b801d8fa979f39b27678fafad1870226db1db245d08b8d55", size = 3619 },
 ]
 
 [[package]]

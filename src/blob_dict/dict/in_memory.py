@@ -1,18 +1,35 @@
+from collections import UserDict
 from collections.abc import Iterator
+from datetime import timedelta
 from typing import override
+
+from ttl_dict import TTLDict
 
 from ..blob import BytesBlob
 from . import BlobDictBase
 
 
 class InMemoryBlobDict(BlobDictBase):
+    __EXTERNAL_DICT_TTL_ERROR_MESSAGE: str = "Cannot specify `ttl` for external `data_dict`"
+
     def __init__(
         self,
-        data_dict: dict[str, BytesBlob] | None = None,
+        data_dict: dict[str, BytesBlob] | UserDict[str, BytesBlob] | None = None,
+        *,
+        ttl: timedelta | None = None,
     ) -> None:
         super().__init__()
 
-        self.__dict: dict[str, BytesBlob] = {} if data_dict is None else data_dict
+        if data_dict is not None and ttl is not None:
+            raise ValueError(InMemoryBlobDict.__EXTERNAL_DICT_TTL_ERROR_MESSAGE)
+
+        self.__dict: dict[str, BytesBlob] | UserDict[str, BytesBlob] = (
+            (
+                {} if ttl is None
+                else TTLDict[str, BytesBlob](ttl)
+            ) if data_dict is None
+            else data_dict
+        )
 
     @override
     def __len__(self) -> int:
