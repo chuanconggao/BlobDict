@@ -41,9 +41,11 @@ class BlobDictBase(ImmutableBlobDictBase, ABC):
     def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
         ...
 
-    @abstractmethod
     def __delitem__(self, key: str) -> None:
-        ...
+        if key not in self:
+            raise KeyError
+
+        self.pop(key)
 
     @abstractmethod
     def __setitem__(self, key: str, blob: BytesBlob) -> None:
