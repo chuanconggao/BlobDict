@@ -17,6 +17,9 @@ image = [
 s3 = [
     "cloudpathlib[s3]>=0.21.0",
 ]
+valkey = [
+    "valkey[libvalkey]>=6.1.0",
+]
 
 [dependency-groups]
 dev = [
