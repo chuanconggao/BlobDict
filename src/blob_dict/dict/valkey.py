@@ -14,10 +14,12 @@ class ValkeyBlobDict(BlobDictBase):
         *,
         ttl: timedelta | None = None,
         str_blob_only: bool = False,
+        client_kwargs: dict[str, Any] | None = None,
     ) -> None:
         super().__init__()
 
-        self.__r: Valkey = Valkey(
+        self.__client: Valkey = Valkey(
+            **(client_kwargs or {}),
             decode_responses=True,
         )
 
@@ -27,15 +29,15 @@ class ValkeyBlobDict(BlobDictBase):
 
     @override
     def __len__(self) -> int:
-        return cast("int", self.__r.dbsize())
+        return cast("int", self.__client.dbsize())
 
     @override
     def __contains__(self, key: str) -> bool:
-        return cast("int", self.__r.exists(key)) == 1
+        return cast("int", self.__client.exists(key)) == 1
 
     @override
     def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
-        response: Any = self.__r.get(key)
+        response: Any = self.__client.get(key)
         if not response:
             return default
 
@@ -47,24 +49,24 @@ class ValkeyBlobDict(BlobDictBase):
 
     @override
     def __iter__(self) -> Iterator[str]:
-        for key in self.__r.scan_iter(_type="STRING"):
+        for key in self.__client.scan_iter(_type="STRING"):
             yield cast("str", key)
 
     @override
     def clear(self) -> None:
-        self.__r.flushdb()
+        self.__client.flushdb()
 
     @override
     def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
         if response := self.get(key):
-            self.__r.delete(key)
+            self.__client.delete(key)
             return response
 
         return default
 
     @override
     def __delitem__(self, key: str) -> None:
-        number_deleted: int = cast("int", self.__r.delete(key))
+        number_deleted: int = cast("int", self.__client.delete(key))
         if number_deleted == 0:
             raise KeyError
 
@@ -75,7 +77,7 @@ class ValkeyBlobDict(BlobDictBase):
         if self.__str_blob_only and not isinstance(blob, StrBlob):
             raise TypeError(self.__BAD_BLOB_CLASS_ERROR_MESSAGE)
 
-        self.__r.set(
+        self.__client.set(
             key,
             (
                 cast("StrBlob", blob).as_str() if self.__str_blob_only
