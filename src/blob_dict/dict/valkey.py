@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from datetime import timedelta
 from typing import Any, cast, override
 
 from valkey import Valkey
@@ -11,6 +12,7 @@ class ValkeyBlobDict(BlobDictBase):
     def __init__(
         self,
         *,
+        ttl: timedelta | None = None,
         str_blob_only: bool = False,
     ) -> None:
         super().__init__()
@@ -18,6 +20,8 @@ class ValkeyBlobDict(BlobDictBase):
         self.__r: Valkey = Valkey(
             decode_responses=True,
         )
+
+        self.__ttl_ms: int | None = int(ttl.total_seconds() * 1_000) if ttl else None
 
         self.__str_blob_only: bool = str_blob_only
 
@@ -77,4 +81,5 @@ class ValkeyBlobDict(BlobDictBase):
                 cast("StrBlob", blob).as_str() if self.__str_blob_only
                 else blob.as_b64_str()
             ),
+            px=self.__ttl_ms,
         )
