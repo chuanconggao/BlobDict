@@ -20,6 +20,9 @@ s3 = [
 valkey = [
     "valkey[libvalkey]>=6.1.0",
 ]
+audio = [
+    "soundfile>=0.13.1",
+]
 
 [dependency-groups]
 dev = [
