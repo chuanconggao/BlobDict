@@ -33,7 +33,7 @@ dependencies = [
 
 [package.optional-dependencies]
 image = [
-    { name = "pillow" },
+    { name = "extratools-image" },
 ]
 s3 = [
     { name = "cloudpathlib", extra = ["s3"] },
@@ -50,7 +50,7 @@ dev = [
 requires-dist = [
     { name = "cloudpathlib", specifier = ">=0.21.0" },
     { name = "cloudpathlib", extras = ["s3"], marker = "extra == 's3'", specifier = ">=0.21.0" },
-    { name = "pillow", marker = "extra == 'image'", specifier = ">=11.1.0" },
+    { name = "extratools-image", marker = "extra == 'image'", specifier = ">=0.1.0" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "simple-zstd", specifier = ">=0.1.0" },
     { name = "time-to-live-dict", specifier = ">=0.1.1" },
@@ -203,6 +203,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/91/50/a9d80c47ff289c611ff12e63f7c5d13942c65d68125160cefd768c73e6e4/executing-2.2.0.tar.gz", hash = "sha256:5d108c028108fe2551d1a7b2e8b713341e2cb4fc0aa7dcf966fa4327a5226755", size = 978693 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7b/8f/c4d9bafc34ad7ad5d8dc16dd1347ee0e507a52c3adb6bfa8887e1c6a26ba/executing-2.2.0-py2.py3-none-any.whl", hash = "sha256:11387150cad388d62750327a53d3339fad4888b39a6fe233c3afbb54ecffd3aa", size = 26702 },
+]
+
+[[package]]
+name = "extratools-image"
+version = "0.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/80/a2/cf09fd26f8b079e82548fa4d046e3e66a9e51d0cad3b841c60ad75120de8/extratools_image-0.1.0.tar.gz", hash = "sha256:a6d587d993133f3fdb7b01504b8be06f24716a4376b1ef9f5a19a9de250b5ec1", size = 41899 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/89/b9/acb790246b2ae9a3c14ad42f5d83bb9c2404e23a0b2beb6ca9cfbe92b02e/extratools_image-0.1.0-py3-none-any.whl", hash = "sha256:d87f8af1715287e257aeed988dbe427f404bb0ed9296868dcc7a9dce4cccba89", size = 2437 },
 ]
 
 [[package]]

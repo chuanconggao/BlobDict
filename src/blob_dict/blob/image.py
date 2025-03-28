@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from io import BytesIO
 from typing import override
 
+from extratools_image import bytes_to_image, image_to_bytes
 from PIL.Image import Image
-from PIL.Image import open as open_image
 
 from . import BytesBlob
 
@@ -12,15 +11,12 @@ from . import BytesBlob
 class ImageBlob(BytesBlob):
     def __init__(self, blob: bytes | Image) -> None:
         if isinstance(blob, Image):
-            bio = BytesIO()
-            blob.save(bio, format="PNG")
-
-            blob = bio.getvalue()
+            blob = image_to_bytes(blob)
 
         super().__init__(blob)
 
     def as_image(self) -> Image:
-        return open_image(self._blob_bytes)
+        return bytes_to_image(self._blob_bytes)
 
     @override
     def __repr__(self) -> str:
