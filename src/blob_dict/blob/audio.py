@@ -28,4 +28,4 @@ class AudioBlob(BytesBlob):
 
     @override
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.as_audio().__repr__()})"
+        return f"{self.__class__.__name__}(...)"

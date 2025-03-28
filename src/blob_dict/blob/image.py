@@ -20,4 +20,4 @@ class ImageBlob(BytesBlob):
 
     @override
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.as_image().__repr__()})"
+        return f"{self.__class__.__name__}(...)"
