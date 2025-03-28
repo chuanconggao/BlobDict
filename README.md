@@ -39,5 +39,6 @@ There as many types of blobs with following class hierarchy relationship:
     - `JsonModelBlob` for any [Pydantic](https://docs.pydantic.dev/) model object
   - `AudioBlob` for any [SoundFile](https://github.com/bastibe/python-soundfile) audio data
   - `ImageBlob` for any [PIL/Pillow](https://python-pillow.github.io/) image data
+  - `VideoBlob` for any [MoviePy](https://zulko.github.io/moviepy/) video clip data
 
 Ultimately, all data are persisted as bytes.
