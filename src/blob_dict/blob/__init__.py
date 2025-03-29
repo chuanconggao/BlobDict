@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from base64 import b64decode, b64encode
-from typing import override
+from typing import Any, override
 
 
 class BytesBlob:
@@ -10,8 +10,12 @@ class BytesBlob:
 
         self._blob_bytes: bytes = blob
 
-    def as_blob(self, blob_class: type[BytesBlob]) -> BytesBlob:
-        return blob_class(self._blob_bytes)
+    def as_blob(
+        self,
+        blob_class: type[BytesBlob],
+        blob_class_args: dict[str, Any] | None = None,
+    ) -> BytesBlob:
+        return blob_class(self._blob_bytes, **(blob_class_args or {}))
 
     def as_bytes(self) -> bytes:
         return self._blob_bytes
