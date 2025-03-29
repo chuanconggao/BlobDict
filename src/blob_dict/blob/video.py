@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 from typing import override
-from uuid import uuid4
 
 from moviepy.editor import VideoClip, VideoFileClip
 
@@ -12,12 +12,13 @@ from . import BytesBlob
 class VideoBlob(BytesBlob):
     def __init__(self, blob: bytes | VideoClip) -> None:
         if isinstance(blob, VideoClip):
-            temp_file: Path = Path(f"{uuid4()}.mp4")
-            blob.write_videofile(temp_file)
-            blob.close()
+            with NamedTemporaryFile(suffix=".mp4", delete_on_close=False) as f:
+                blob.write_videofile(f.name)
+                blob.close()
 
-            blob = temp_file.read_bytes()
-            temp_file.unlink()
+                f.close()
+
+                blob = Path(f.name).read_bytes()
 
         super().__init__(blob)
 
