@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any, override
 
 from cloudpathlib import CloudPath
-from simple_zstd import compress, decompress
 
 from ..blob import BytesBlob, StrBlob
 from ..blob.json import JsonDictBlob
@@ -93,9 +92,12 @@ class PathBlobDict(BlobDictBase):
             return default
 
         blob_bytes: bytes = (self.__path / key).read_bytes()
-        if self.__compression:
-            blob_bytes = decompress(blob_bytes)
-        return self.__get_blob_class(key)(blob_bytes, **self.__blob_class_args)
+
+        blob: BytesBlob = BytesBlob.from_bytes(blob_bytes, compression=self.__compression)
+        return blob.as_blob(
+            self.__get_blob_class(key),
+            self.__blob_class_args,
+        )
 
     @override
     def __iter__(self) -> Iterator[str]:
@@ -160,7 +162,5 @@ class PathBlobDict(BlobDictBase):
             exist_ok=True,
         )
 
-        blob_bytes: bytes = blob.as_bytes()
-        if self.__compression:
-            blob_bytes = compress(blob_bytes)
+        blob_bytes: bytes = blob.as_bytes(compression=self.__compression)
         (self.__path / key).write_bytes(blob_bytes)

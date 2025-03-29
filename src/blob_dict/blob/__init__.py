@@ -3,6 +3,8 @@ from __future__ import annotations
 from base64 import b64decode, b64encode
 from typing import Any, override
 
+from simple_zstd import compress, decompress
+
 
 class BytesBlob:
     def __init__(self, blob: bytes) -> None:
@@ -17,8 +19,12 @@ class BytesBlob:
     ) -> BytesBlob:
         return blob_class(self._blob_bytes, **(blob_class_args or {}))
 
-    def as_bytes(self) -> bytes:
-        return self._blob_bytes
+    def as_bytes(self, *, compression: bool = False) -> bytes:
+        return compress(self._blob_bytes) if compression else self._blob_bytes
+
+    @staticmethod
+    def from_bytes(b: bytes, *, compression: bool = False) -> BytesBlob:
+        return BytesBlob(decompress(b) if compression else b)
 
     @staticmethod
     def from_b64_str(s: str) -> BytesBlob:
