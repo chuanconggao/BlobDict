@@ -17,8 +17,8 @@ class BytesBlob:
         return self._blob_bytes
 
     @staticmethod
-    def from_b64_str(blob: str) -> BytesBlob:
-        return BytesBlob(b64decode(blob))
+    def from_b64_str(s: str) -> BytesBlob:
+        return BytesBlob(b64decode(s))
 
     def as_b64_str(self) -> str:
         return b64encode(self._blob_bytes).decode("ascii")
