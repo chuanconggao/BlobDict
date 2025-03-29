@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any, override
 
+import yaml
 from pydantic import BaseModel
 
 from . import StrBlob
@@ -17,6 +18,21 @@ class JsonDictBlob(StrBlob):
 
     def as_dict(self) -> dict[str, Any]:
         return json.loads(self._blob_bytes)
+
+    @override
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.as_dict().__repr__()})"
+
+
+class YamlDictBlob(StrBlob):
+    def __init__(self, blob: bytes | str | dict[str, Any]) -> None:
+        if isinstance(blob, dict):
+            blob = yaml.safe_dump(blob)
+
+        super().__init__(blob)
+
+    def as_dict(self) -> dict[str, Any]:
+        return yaml.safe_load(self._blob_bytes)
 
     @override
     def __repr__(self) -> str:

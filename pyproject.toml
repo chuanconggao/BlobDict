@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "cloudpathlib>=0.21.0",
     "pydantic>=2.10.6",
+    "pyyaml>=6.0.2",
     "simple-zstd>=0.1.0",
     "time-to-live-dict>=0.1.1",
 ]
