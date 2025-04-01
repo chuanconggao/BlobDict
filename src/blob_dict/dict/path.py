@@ -1,12 +1,13 @@
 import shutil
 from collections.abc import Iterator
+from mimetypes import guess_type
 from pathlib import Path
 from typing import Any, override
 
 from cloudpathlib import CloudPath
 
 from ..blob import BytesBlob, StrBlob
-from ..blob.json import JsonDictBlob
+from ..blob.json import JsonDictBlob, YamlDictBlob
 from . import BlobDictBase
 
 
@@ -46,43 +47,42 @@ class PathBlobDict(BlobDictBase):
     def __contains__(self, key: str) -> bool:
         return (self.__path / key).is_file()
 
-    def __get_blob_class(self, key: str) -> type[BytesBlob]:
-        match (self.__path / key).suffix.lower():
-            case ".json":
+    def __get_blob_class(self, key: str) -> type[BytesBlob]:  # noqa: PLR0911
+        mime_type: str | None
+        mime_type, _ = guess_type(self.__path / key)
+
+        match mime_type:
+            case "application/json":
                 return JsonDictBlob
-            case ".png":
+            case "application/octet-stream":
+                return BytesBlob
+            case "application/yaml":
+                return YamlDictBlob
+            case "audo/mpeg":
+                # Import here as it has optional dependency
+                from ..blob.audio import AudioBlob  # noqa: PLC0415
+
+                return AudioBlob
+            case "image/png":
                 # Import here as it has optional dependency
                 from ..blob.image import ImageBlob  # noqa: PLC0415
 
                 return ImageBlob
-            # Common text file extensions
-            # https://en.wikipedia.org/wiki/List_of_file_formats
             case (
-                ".asc"
-                | ".bib"
-                | ".cfg"
-                | ".cnf"
-                | ".conf"
-                | ".csv"
-                | ".diff"
-                | ".htm"
-                | ".html"
-                | ".ini"
-                | ".log"
-                | ".markdown"
-                | ".md"
-                | ".tex"
-                | ".text"
-                | ".toml"
-                | ".tsv"
-                | ".txt"
-                | ".xhtml"
-                | ".xht"
-                | ".xml"
-                | ".yaml"
-                | ".yml"
+                "text/css"
+                 | "text/csv"
+                 | "text/html"
+                 | "text/javascript"
+                 | "text/markdown"
+                 | "text/plain"
+                 | "text/xml"
             ):
                 return StrBlob
+            case "video/mp4":
+                # Import here as it has optional dependency
+                from ..blob.video import VideoBlob  # noqa: PLC0415
+
+                return VideoBlob
             case _:
                 return self.__blob_class
 
