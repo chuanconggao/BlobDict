@@ -1,10 +1,11 @@
 import shutil
+from abc import abstractmethod
 from collections.abc import Iterator
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Any, override
+from typing import Any, Protocol, override
 
-from cloudpathlib import CloudPath
+from extratools_core.typing import PathLike
 
 from ..blob import BytesBlob, StrBlob
 from ..blob.json import JsonDictBlob, YamlDictBlob
@@ -16,10 +17,16 @@ class LocalPath(Path):
         shutil.rmtree(self)
 
 
+class ExtraPathLike(PathLike, Protocol):
+    @abstractmethod
+    def rmtree(self) -> None:
+        ...
+
+
 class PathBlobDict(BlobDictBase):
     def __init__(
         self,
-        path: LocalPath | CloudPath,
+        path: ExtraPathLike,
         *,
         compression: bool = False,
         blob_class: type[BytesBlob] = BytesBlob,
@@ -27,7 +34,7 @@ class PathBlobDict(BlobDictBase):
     ) -> None:
         super().__init__()
 
-        self.__path: LocalPath | CloudPath = path
+        self.__path: ExtraPathLike = path
 
         self.__compression: bool = compression
 
@@ -130,7 +137,7 @@ class PathBlobDict(BlobDictBase):
             if parent == self.__path:
                 return
 
-            if parent.is_dir() and next(parent.iterdir(), None) is None:
+            if parent.is_dir() and next(iter(parent.iterdir()), None) is None:
                 parent.rmdir()
 
     @override
