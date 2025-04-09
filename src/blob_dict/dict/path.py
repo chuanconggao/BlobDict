@@ -118,7 +118,7 @@ class PathBlobDict(BlobDictBase):
             + 1
         )
 
-        for parent, _, files in self.__path.walk(top_down=False):
+        for parent, _, files in self.__path.walk():
             for filename in files:
                 yield str(parent / filename)[prefix_len:]
 
