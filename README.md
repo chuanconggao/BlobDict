@@ -24,6 +24,7 @@ There are different blob dict implementations:
 - `InMemoryBlobDict` for in-memory storage, with optional TTL
 - `PathBlobDict` for specified folder on file system as storage, with relative file path as key
   - It supports local file systems via `PathLib`
+    - Ideally use provided `LocalPath` class (which is a subclass of `Path`) for full support
   - It also supports cloud file systems (like AWS S3 (and competible Cloudflare R2), Azure Blob Storage, and Google Cloud Storage) via [`CloudPathLib`](https://cloudpathlib.drivendata.org/stable/)
 - `VulkeyBlobDict` for Vulkey/Redis-based storage, with optional TTL
 - Specially, `MultiReplicaBlobDict` for utilizing multiple blob dicts underneath
