@@ -34,6 +34,9 @@ class PathBlobDict(BlobDictBase):
     ) -> None:
         super().__init__()
 
+        if isinstance(path, Path):
+            path = path.expanduser()
+
         self.__path: ExtraPathLike = path
 
         self.__compression: bool = compression
