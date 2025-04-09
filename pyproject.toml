@@ -28,6 +28,9 @@ audio = [
 video = [
     "moviepy>=1.0.3",
 ]
+git = [
+    "extratools-git>=0.1.2",
+]
 
 [dependency-groups]
 dev = [

@@ -12,6 +12,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ansicolors"
+version = "1.1.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/31/7faed52088732704523c259e24c26ce6f2f33fbeff2ff59274560c27628e/ansicolors-1.1.8.zip", hash = "sha256:99f94f5e3348a0bcd43c82e5fc4414013ccc19d70bd939ad71e0133ce9c372e0", size = 23027 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/18/a56e2fe47b259bb52201093a3a9d4a32014f9d85071ad07e9d60600890ca/ansicolors-1.1.8-py2.py3-none-any.whl", hash = "sha256:00d2dde5a675579325902536738dd27e4fac1fd68f773fe36c21044eb559e187", size = 13847 },
+]
+
+[[package]]
 name = "asttokens"
 version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -35,6 +44,9 @@ dependencies = [
 [package.optional-dependencies]
 audio = [
     { name = "soundfile" },
+]
+git = [
+    { name = "extratools-git" },
 ]
 image = [
     { name = "extratools-image" },
@@ -60,6 +72,7 @@ dev = [
 requires-dist = [
     { name = "cloudpathlib", extras = ["s3"], marker = "extra == 's3'", specifier = ">=0.21.0" },
     { name = "extratools-core", specifier = ">=0.1.8" },
+    { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.2" },
     { name = "extratools-image", marker = "extra == 'image'", specifier = ">=0.1.0" },
     { name = "moviepy", marker = "extra == 'video'", specifier = ">=1.0.3" },
     { name = "pydantic", specifier = ">=2.10.6" },
@@ -69,7 +82,7 @@ requires-dist = [
     { name = "time-to-live-dict", specifier = ">=0.1.1" },
     { name = "valkey", extras = ["libvalkey"], marker = "extra == 'valkey'", specifier = ">=6.1.0" },
 ]
-provides-extras = ["image", "s3", "valkey", "audio", "video"]
+provides-extras = ["image", "s3", "valkey", "audio", "video", "git"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -273,6 +286,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c1/42/92dc1a472e51904885d147bd11ce8338377094136c0242f0878be1377f57/extratools_core-0.1.8.tar.gz", hash = "sha256:f7d60131ca7154c49ba71039859f0bd8ed16d255f0c8565812ce9de7deec66fd", size = 81573 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cd/73/1b53b47fce74de00c2a6eea60f46e060ff99d60e6e40bb473e2005fad228/extratools_core-0.1.8-py3-none-any.whl", hash = "sha256:a5fdba8b807cbc98219f227dbe193f3d65806ba3ca0f5fbc3a163c7ac3d68bb9", size = 16187 },
+]
+
+[[package]]
+name = "extratools-git"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ansicolors" },
+    { name = "sh" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/dd/46a271bba6bd0d5ffdd3d2d7934561579b70bf3fb2a65ceb346ba214a658/extratools_git-0.1.2.tar.gz", hash = "sha256:c0ff4f0ee607c485dd980892f968e513655f9094d364287643f2ce9c49ad6169", size = 60025 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7a/4f/f8402480b9f9e8bdbc6bed78e87290517e5ce1cdb7acb7b4fd131104a8f3/extratools_git-0.1.2-py3-none-any.whl", hash = "sha256:0be81d3429b8e38089d5a51930815cf41268b097080971bbf8ba12eb9304e429", size = 5010 },
 ]
 
 [[package]]
@@ -808,6 +834,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/0f/ec/aa1a215e5c126fe5decbee2e107468f51d9ce190b9763cb649f76bb45938/s3transfer-0.11.4.tar.gz", hash = "sha256:559f161658e1cf0a911f45940552c696735f5c74e64362e515f333ebed87d679", size = 148419 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/86/62/8d3fc3ec6640161a5649b2cddbbf2b9fa39c92541225b33f117c37c5a2eb/s3transfer-0.11.4-py3-none-any.whl", hash = "sha256:ac265fa68318763a03bf2dc4f39d5cbd6a9e178d81cc9483ad27da33637e320d", size = 84412 },
+]
+
+[[package]]
+name = "sh"
+version = "2.2.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/59/52/f43920223c93e31874677c681b8603d36a40d3d8502d3a37f80d3995d43e/sh-2.2.2.tar.gz", hash = "sha256:653227a7c41a284ec5302173fbc044ee817c7bad5e6e4d8d55741b9aeb9eb65b", size = 345866 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/70/98/d82f14ac7ffedbd38dfa2383f142b26d18d23ca6cf35a40f4af60df666bd/sh-2.2.2-py3-none-any.whl", hash = "sha256:e0b15b4ae8ffcd399bc8ffddcbd770a43c7a70a24b16773fbb34c001ad5d52af", size = 38295 },
 ]
 
 [[package]]
