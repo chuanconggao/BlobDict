@@ -23,6 +23,7 @@ valkey = [
     "valkey[libvalkey]>=6.1.0",
 ]
 audio = [
+    "moviepy>=1.0.3",
     "soundfile>=0.13.1",
 ]
 video = [

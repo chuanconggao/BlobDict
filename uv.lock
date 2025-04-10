@@ -43,6 +43,7 @@ dependencies = [
 
 [package.optional-dependencies]
 audio = [
+    { name = "moviepy" },
     { name = "soundfile" },
 ]
 git = [
@@ -74,6 +75,7 @@ requires-dist = [
     { name = "extratools-core", specifier = ">=0.1.8" },
     { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.2" },
     { name = "extratools-image", marker = "extra == 'image'", specifier = ">=0.1.0" },
+    { name = "moviepy", marker = "extra == 'audio'", specifier = ">=1.0.3" },
     { name = "moviepy", marker = "extra == 'video'", specifier = ">=1.0.3" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "pyyaml", specifier = ">=6.0.2" },
