@@ -12,13 +12,19 @@ from . import BytesBlob
 class VideoBlob(BytesBlob):
     def __init__(self, blob: bytes | VideoClip) -> None:
         if isinstance(blob, VideoClip):
-            with NamedTemporaryFile(suffix=".mp4", delete_on_close=False) as f:
-                blob.write_videofile(f.name)
-                blob.close()
+            if (
+                isinstance(blob, VideoFileClip)
+                and blob.filename.endswith(".mp4")
+            ):
+                blob = Path(blob.filename).read_bytes()
+            else:
+                with NamedTemporaryFile(suffix=".mp4", delete_on_close=False) as f:
+                    blob.write_videofile(f.name)
+                    blob.close()
 
-                f.close()
+                    f.close()
 
-                blob = Path(f.name).read_bytes()
+                    blob = Path(f.name).read_bytes()
 
         super().__init__(blob)
 

@@ -23,13 +23,21 @@ class AudioBlob(BytesBlob):
 
     def __init__(self, blob: bytes | AudioClip | AudioData) -> None:
         if isinstance(blob, AudioClip):
-            with NamedTemporaryFile(suffix=".mp3", delete_on_close=False) as f:
-                blob.write_audiofile(f.name)
-                blob.close()
+            if (
+                isinstance(blob, AudioFileClip)
+                # Need to check whether `filename` is `str`` as it can also be sound array
+                and isinstance(blob.filename, str)
+                and blob.filename.endswith(".mp3")
+            ):
+                blob = Path(blob.filename).read_bytes()
+            else:
+                with NamedTemporaryFile(suffix=".mp3", delete_on_close=False) as f:
+                    blob.write_audiofile(f.name)
+                    blob.close()
 
-                f.close()
+                    f.close()
 
-                blob = Path(f.name).read_bytes()
+                    blob = Path(f.name).read_bytes()
         elif isinstance(blob, AudioData):
             bio = BytesIO()
             bio.name = AudioBlob.__IN_MEMORY_FILE_NAME
