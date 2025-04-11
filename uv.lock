@@ -73,7 +73,7 @@ dev = [
 requires-dist = [
     { name = "cloudpathlib", extras = ["s3"], marker = "extra == 's3'", specifier = ">=0.21.0" },
     { name = "extratools-core", specifier = ">=0.1.8" },
-    { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.2" },
+    { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.3" },
     { name = "extratools-image", marker = "extra == 'image'", specifier = ">=0.1.0" },
     { name = "moviepy", marker = "extra == 'audio'", specifier = ">=1.0.3" },
     { name = "moviepy", marker = "extra == 'video'", specifier = ">=1.0.3" },
@@ -292,15 +292,15 @@ wheels = [
 
 [[package]]
 name = "extratools-git"
-version = "0.1.2"
+version = "0.1.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ansicolors" },
     { name = "sh" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0e/dd/46a271bba6bd0d5ffdd3d2d7934561579b70bf3fb2a65ceb346ba214a658/extratools_git-0.1.2.tar.gz", hash = "sha256:c0ff4f0ee607c485dd980892f968e513655f9094d364287643f2ce9c49ad6169", size = 60025 }
+sdist = { url = "https://files.pythonhosted.org/packages/eb/35/7b87c54c3667bad9274c54761c9708eaa3258ac49fcd11c62f401607b519/extratools_git-0.1.3.tar.gz", hash = "sha256:1381dfdf2d1654520b207f19fbe304aea47da01195e7d2303bb2fbaa4b0f15b4", size = 62567 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7a/4f/f8402480b9f9e8bdbc6bed78e87290517e5ce1cdb7acb7b4fd131104a8f3/extratools_git-0.1.2-py3-none-any.whl", hash = "sha256:0be81d3429b8e38089d5a51930815cf41268b097080971bbf8ba12eb9304e429", size = 5010 },
+    { url = "https://files.pythonhosted.org/packages/16/c5/8af7a7f242d7861fad39c6f84380fdc7b608ca4d19a9bca7461f2ac4382e/extratools_git-0.1.3-py3-none-any.whl", hash = "sha256:b552cc263ac67c048a7e0624ae87db817ac8940f5f8adfdd4c432fadec02f91d", size = 5549 },
 ]
 
 [[package]]

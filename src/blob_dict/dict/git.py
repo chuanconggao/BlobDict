@@ -65,11 +65,22 @@ class GitBlobDict(PathBlobDict):
         )
 
     @override
-    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def get(self, key: str | tuple[str, Any], default: BytesBlob | None = None) -> BytesBlob | None:
         if self.__can_use_remote():
             self.__repo.pull(background=True)
 
-        return super().get(key, default)
+        if isinstance(key, str):
+            return super().get(key, default)
+
+        try:
+            key, version = key
+
+            return self._get(
+                key,
+                self.__repo.get_blob(key, version=version),
+            )
+        except FileNotFoundError:
+            return default
 
     @override
     def __iter__(self) -> Iterator[str]:

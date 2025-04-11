@@ -30,7 +30,7 @@ video = [
     "moviepy>=1.0.3",
 ]
 git = [
-    "extratools-git>=0.1.2",
+    "extratools-git>=0.1.3",
 ]
 
 [dependency-groups]

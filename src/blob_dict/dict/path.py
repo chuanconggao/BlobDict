@@ -96,18 +96,19 @@ class PathBlobDict(BlobDictBase):
             case _:
                 return self.__blob_class
 
-    @override
-    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
-        if key not in self:
-            return default
-
-        blob_bytes: bytes = (self.__path / key).read_bytes()
-
+    def _get(self, key: str, blob_bytes: bytes) -> BytesBlob:
         blob: BytesBlob = BytesBlob.from_bytes(blob_bytes, compression=self.__compression)
         return blob.as_blob(
             self.__get_blob_class(key),
             self.__blob_class_args,
         )
+
+    @override
+    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+        if key not in self:
+            return default
+
+        return self._get(key, (self.__path / key).read_bytes())
 
     @override
     def __iter__(self) -> Iterator[str]:
