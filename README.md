@@ -29,6 +29,11 @@ There are different blob dict implementations:
 - `GitBlobDict` for specified Git repo on file system as storage, with relative file path as key
   - It auto commits any add/update/delete
   - It auto syncs with remote if enabled
+  - Optionally, key can be tuple where the second part is version:
+    - `str` for version at specified commit/tag, like `HEAD~2`
+    - `int` for relative version (same way of Python sequence index) of file, like `0` for first version and `-2` for previous version
+    - `datetime` for latest version before specified date/time
+    - `timedelta` for latest version of specified duration before now
 - `VulkeyBlobDict` for Vulkey/Redis-based storage, with optional TTL
 - Specially, `MultiReplicaBlobDict` for utilizing multiple blob dicts underneath
   - For example, you can use in-memory or local file system blob dict as cache layer, while any cloud file system blob dict as storage
