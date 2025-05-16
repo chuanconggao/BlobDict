@@ -14,7 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 image = [
-    "extratools-image>=0.1.0",
+    "extratools-image>=0.1.6",
 ]
 s3 = [
     "cloudpathlib[s3]>=0.21.0",
