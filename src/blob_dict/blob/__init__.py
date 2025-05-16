@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from base64 import b64decode, b64encode
-from typing import Any, override
+from pathlib import Path
+from typing import Any, Self, override
 
 from simple_zstd import compress, decompress
 
@@ -35,6 +36,13 @@ class BytesBlob:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.as_bytes().__repr__()})"
+
+    @classmethod
+    def load(cls: type[Self], f: Path | str) -> Self:
+        return cls(Path(f).expanduser().read_bytes())
+
+    def dump(self, f: Path | str) -> None:
+        Path(f).expanduser().write_bytes(self.as_bytes())
 
 
 class StrBlob(BytesBlob):

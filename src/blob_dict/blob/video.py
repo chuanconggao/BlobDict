@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import override
+from typing import Self, override
 
 from moviepy.editor import VideoClip, VideoFileClip
 
@@ -35,3 +35,26 @@ class VideoBlob(BytesBlob):
     @override
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(...)"
+
+    @classmethod
+    @override
+    def load(cls: type[Self], f: Path | str) -> Self:
+        f = Path(f).expanduser()
+
+        if f.suffix.lower() == ".mp4":
+            return cls(f.read_bytes())
+
+        clip = VideoFileClip(str(f))
+        blob = cls(clip)
+        clip.close()
+
+        return blob
+
+    @override
+    def dump(self, f: Path | str) -> None:
+        f = Path(f).expanduser()
+        if f.suffix.lower() != ".mp4":
+            msg = "Only MP4 file is supported."
+            raise ValueError(msg)
+
+        f.write_bytes(self.as_bytes())
