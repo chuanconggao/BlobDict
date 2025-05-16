@@ -14,7 +14,7 @@ class VideoBlob(BytesBlob):
         if isinstance(blob, VideoClip):
             if (
                 isinstance(blob, VideoFileClip)
-                and blob.filename.endswith(".mp4")
+                and blob.filename.lower().endswith(".mp4")
             ):
                 blob = Path(blob.filename).read_bytes()
             else:

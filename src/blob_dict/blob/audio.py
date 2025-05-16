@@ -27,7 +27,7 @@ class AudioBlob(BytesBlob):
                 isinstance(blob, AudioFileClip)
                 # Need to check whether `filename` is `str`` as it can also be sound array
                 and isinstance(blob.filename, str)
-                and blob.filename.endswith(".mp3")
+                and blob.filename.lower().endswith(".mp3")
             ):
                 blob = Path(blob.filename).read_bytes()
             else:
