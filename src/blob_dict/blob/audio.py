@@ -33,7 +33,6 @@ class AudioBlob(BytesBlob):
             else:
                 with NamedTemporaryFile(suffix=".mp3", delete_on_close=False) as f:
                     blob.write_audiofile(f.name)
-                    blob.close()
 
                     f.close()
 

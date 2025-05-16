@@ -20,7 +20,6 @@ class VideoBlob(BytesBlob):
             else:
                 with NamedTemporaryFile(suffix=".mp4", delete_on_close=False) as f:
                     blob.write_videofile(f.name)
-                    blob.close()
 
                     f.close()
 
