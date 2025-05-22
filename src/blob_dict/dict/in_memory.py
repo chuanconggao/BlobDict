@@ -1,5 +1,4 @@
-from collections import UserDict
-from collections.abc import Iterator
+from collections.abc import Iterator, MutableMapping
 from datetime import timedelta
 from typing import override
 
@@ -14,7 +13,7 @@ class InMemoryBlobDict(BlobDictBase):
 
     def __init__(
         self,
-        data_dict: dict[str, BytesBlob] | UserDict[str, BytesBlob] | None = None,
+        data_dict: MutableMapping[str, BytesBlob] | None = None,
         *,
         ttl: timedelta | None = None,
     ) -> None:
@@ -23,7 +22,7 @@ class InMemoryBlobDict(BlobDictBase):
         if data_dict is not None and ttl is not None:
             raise ValueError(InMemoryBlobDict.__EXTERNAL_DICT_TTL_ERROR_MESSAGE)
 
-        self.__dict: dict[str, BytesBlob] | UserDict[str, BytesBlob] = (
+        self.__dict: MutableMapping[str, BytesBlob] = (
             (
                 {} if ttl is None
                 else TTLDict[str, BytesBlob](ttl)
