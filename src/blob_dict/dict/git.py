@@ -65,12 +65,12 @@ class GitBlobDict(PathBlobDict):
         )
 
     @override
-    def get(self, key: str | tuple[str, Any], default: BytesBlob | None = None) -> BytesBlob | None:
+    def __getitem__(self, key: str | tuple[str, Any], /) -> BytesBlob:
         if self.__can_use_remote():
             self.__repo.pull(background=True)
 
         if isinstance(key, str):
-            return super().get(key, default)
+            return super().__getitem__(key)
 
         try:
             key, version = key
@@ -79,8 +79,8 @@ class GitBlobDict(PathBlobDict):
                 key,
                 self.__repo.get_blob(key, version=version),
             )
-        except FileNotFoundError:
-            return default
+        except FileNotFoundError as e:
+            raise KeyError from e
 
     @override
     def __iter__(self) -> Iterator[str]:
@@ -96,7 +96,7 @@ class GitBlobDict(PathBlobDict):
                 yield str(child_path.relative_to(self.__repo_path))
 
     @override
-    def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
         if self.is_forbidden_key(key):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
 
@@ -113,7 +113,7 @@ class GitBlobDict(PathBlobDict):
         return result
 
     @override
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str, /) -> None:
         if self.is_forbidden_key(key):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
 
@@ -126,7 +126,7 @@ class GitBlobDict(PathBlobDict):
             self.__repo.push(background=True)
 
     @override
-    def __setitem__(self, key: str, blob: BytesBlob) -> None:
+    def __setitem__(self, key: str, blob: BytesBlob, /) -> None:
         if self.is_forbidden_key(key):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
 

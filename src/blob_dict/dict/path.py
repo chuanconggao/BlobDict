@@ -104,9 +104,9 @@ class PathBlobDict(BlobDictBase):
         )
 
     @override
-    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def __getitem__(self, key: str, /) -> BytesBlob:
         if key not in self:
-            return default
+            raise KeyError
 
         return self._get(key, (self.__path / key).read_bytes())
 
@@ -145,7 +145,7 @@ class PathBlobDict(BlobDictBase):
                 parent.rmdir()
 
     @override
-    def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
         blob: BytesBlob | None = self.get(key)
         if blob:
             self.__cleanup(key)
@@ -153,7 +153,7 @@ class PathBlobDict(BlobDictBase):
         return blob or default
 
     @override
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str, /) -> None:
         if key not in self:
             raise KeyError
 
@@ -162,7 +162,7 @@ class PathBlobDict(BlobDictBase):
     __BAD_BLOB_CLASS_ERROR_MESSAGE: str = "Must specify blob that is instance of {blob_class}"
 
     @override
-    def __setitem__(self, key: str, blob: BytesBlob) -> None:
+    def __setitem__(self, key: str, blob: BytesBlob, /) -> None:
         if not isinstance(blob, self.__blob_class):
             raise TypeError(PathBlobDict.__BAD_BLOB_CLASS_ERROR_MESSAGE.format(
                 blob_class=self.__blob_class,

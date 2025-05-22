@@ -39,8 +39,12 @@ class InMemoryBlobDict(BlobDictBase):
         return key in self.__dict
 
     @override
-    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def get(self, key: str, /, default: BytesBlob | None) -> BytesBlob | None:
         return self.__dict.get(key, default)
+
+    @override
+    def __getitem__(self, key: str, /) -> BytesBlob:
+        return self.__dict[key]
 
     @override
     def __iter__(self) -> Iterator[str]:
@@ -53,13 +57,13 @@ class InMemoryBlobDict(BlobDictBase):
         self.__dict.clear()
 
     @override
-    def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
         return self.__dict.pop(key, default)
 
     @override
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str, /) -> None:
         del self.__dict[key]
 
     @override
-    def __setitem__(self, key: str, blob: BytesBlob) -> None:
+    def __setitem__(self, key: str, blob: BytesBlob, /) -> None:
         self.__dict[key] = blob

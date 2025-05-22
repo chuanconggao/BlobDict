@@ -51,6 +51,7 @@ class MultiReplicaBlobDict(BlobDictBase):
     def get(
         self,
         key: str,
+        /,
         default: BytesBlob | None = None,
         *,
         replica_names: set[str] | None = None,
@@ -67,7 +68,7 @@ class MultiReplicaBlobDict(BlobDictBase):
         return default
 
     @override
-    def __getitem__(self, key: str) -> BytesBlob:
+    def __getitem__(self, key: str, /) -> BytesBlob:
         blob: BytesBlob | None = self.get(key)
         if blob is None:
             raise KeyError
@@ -109,6 +110,7 @@ class MultiReplicaBlobDict(BlobDictBase):
     def pop(
         self,
         key: str,
+        /,
         default: BytesBlob | None = None,
         *,
         replica_names: set[str] | None = None,
@@ -125,7 +127,7 @@ class MultiReplicaBlobDict(BlobDictBase):
         return final_blob
 
     @override
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str, /) -> None:
         if key not in self:
             raise KeyError
 
@@ -136,6 +138,7 @@ class MultiReplicaBlobDict(BlobDictBase):
         self,
         key: str,
         blob: BytesBlob,
+        /,
         *,
         replica_names: set[str] | None = None,
     ) -> None:

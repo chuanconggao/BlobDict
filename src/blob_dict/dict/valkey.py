@@ -36,7 +36,7 @@ class ValkeyBlobDict(BlobDictBase):
         return cast("int", self.__client.exists(key)) == 1
 
     @override
-    def get(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def get(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
         response: Any = self.__client.get(key)
         if not response:
             return default
@@ -48,6 +48,14 @@ class ValkeyBlobDict(BlobDictBase):
         )
 
     @override
+    def __getitem__(self, key: str, /) -> BytesBlob:
+        blob: BytesBlob | None = self.get(key)
+        if blob is None:
+            raise KeyError
+
+        return blob
+
+    @override
     def __iter__(self) -> Iterator[str]:
         for key in self.__client.scan_iter(_type="STRING"):
             yield cast("str", key)
@@ -57,7 +65,7 @@ class ValkeyBlobDict(BlobDictBase):
         self.__client.flushdb()
 
     @override
-    def pop(self, key: str, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
         if response := self.get(key):
             self.__client.delete(key)
             return response
@@ -65,7 +73,7 @@ class ValkeyBlobDict(BlobDictBase):
         return default
 
     @override
-    def __delitem__(self, key: str) -> None:
+    def __delitem__(self, key: str, /) -> None:
         number_deleted: int = cast("int", self.__client.delete(key))
         if number_deleted == 0:
             raise KeyError
@@ -73,7 +81,7 @@ class ValkeyBlobDict(BlobDictBase):
     __BAD_BLOB_CLASS_ERROR_MESSAGE: str = "Must specify blob of type `StrBlob`"
 
     @override
-    def __setitem__(self, key: str, blob: BytesBlob) -> None:
+    def __setitem__(self, key: str, blob: BytesBlob, /) -> None:
         if self.__str_blob_only and not isinstance(blob, StrBlob):
             raise TypeError(self.__BAD_BLOB_CLASS_ERROR_MESSAGE)
 
