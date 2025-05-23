@@ -44,6 +44,16 @@ class BytesBlob:
     def dump(self, f: Path | str) -> None:
         Path(f).expanduser().write_bytes(self.as_bytes())
 
+    @override
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, bytes):
+            return self._blob_bytes == value
+
+        if isinstance(value, BytesBlob):
+            return self._blob_bytes == value._blob_bytes
+
+        return False
+
 
 class StrBlob(BytesBlob):
     def __init__(self, blob: bytes | str) -> None:
