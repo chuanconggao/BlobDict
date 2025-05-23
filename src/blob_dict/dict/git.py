@@ -52,8 +52,8 @@ class GitBlobDict(PathBlobDict):
     __FORBIDDEN_KEY_ERROR_MESSAGE: str = "Cannot use any Git reserved file name as key"
 
     @override
-    def __contains__(self, key: str) -> bool:
-        if self.is_forbidden_key(key):
+    def __contains__(self, key: object) -> bool:
+        if self.is_forbidden_key(str(key)):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
 
         return super().__contains__(key)
@@ -96,23 +96,6 @@ class GitBlobDict(PathBlobDict):
                 yield str(child_path.relative_to(self.__repo_path))
 
     @override
-    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
-        if self.is_forbidden_key(key):
-            raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
-
-        result: BytesBlob | None = super().pop(key, default)
-        if result is None:
-            return None
-
-        self.__repo.stage(key)
-        self.__repo.commit(f"Delete {key}")
-
-        if self.__can_use_remote():
-            self.__repo.push(background=True)
-
-        return result
-
-    @override
     def __delitem__(self, key: str, /) -> None:
         if self.is_forbidden_key(key):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
@@ -130,12 +113,14 @@ class GitBlobDict(PathBlobDict):
         if self.is_forbidden_key(key):
             raise ValueError(self.__FORBIDDEN_KEY_ERROR_MESSAGE)
 
-        exists: bool = key in self
+        existing_blob: BytesBlob | None = self.get(key)
+        if existing_blob == blob:
+            return
 
         super().__setitem__(key, blob)
 
         self.__repo.stage(key)
-        self.__repo.commit(f"{"Update" if exists else "Add"} {key}")
+        self.__repo.commit(f"{"Update" if existing_blob else "Add"} {key}")
 
         if self.__can_use_remote():
             self.__repo.push(background=True)
