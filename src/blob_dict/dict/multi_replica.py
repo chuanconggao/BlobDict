@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from typing import override
+from typing import Any, Literal, override
 
 from ..blob import BytesBlob
 from . import BlobDictBase
@@ -30,8 +30,8 @@ class MultiReplicaBlobDict(BlobDictBase):
         )
 
     @override
-    def __contains__(self, key: str) -> bool:
-        return self.contains(key)
+    def __contains__(self, key: Any) -> bool:
+        return self.contains(str(key))
 
     def contains(
         self,
@@ -48,21 +48,21 @@ class MultiReplicaBlobDict(BlobDictBase):
         )
 
     @override
-    def get(
+    def get[T: Any](
         self,
         key: str,
         /,
-        default: BytesBlob | None = None,
+        default: BytesBlob | T = None,
         *,
         replica_names: set[str] | None = None,
-    ) -> BytesBlob | None:
+    ) -> BytesBlob | T:
         for replica_name in (
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
             replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
             blob: BytesBlob | None
-            if blob := replica_dict.get(key, default):
+            if blob := replica_dict.get(key):
                 return blob
 
         return default
@@ -107,24 +107,30 @@ class MultiReplicaBlobDict(BlobDictBase):
             replica_dict.clear()
 
     @override
-    def pop(
+    def pop[T: Any](
         self,
         key: str,
         /,
-        default: BytesBlob | None = None,
+        default: BytesBlob | T | Literal["__DEFAULT"] = "__DEFAULT",
         *,
         replica_names: set[str] | None = None,
-    ) -> BytesBlob | None:
-        final_blob: BytesBlob | None = default
+    ) -> BytesBlob | T:
+        final_blob: BytesBlob | None = None
         for replica_name in (
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
             replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
-            if (blob := replica_dict.pop(key)) and not final_blob:
+            if (blob := replica_dict.pop(key, None)) and not final_blob:
                 final_blob = blob
 
-        return final_blob
+        if final_blob:
+            return final_blob
+
+        if default == "__DEFAULT":
+            raise KeyError
+
+        return default
 
     @override
     def __delitem__(self, key: str, /) -> None:
