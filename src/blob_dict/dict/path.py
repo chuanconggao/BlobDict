@@ -117,14 +117,14 @@ class PathBlobDict(BlobDictBase):
         # Therefore, we extract each key by removing the path prefix.
         # In this way, the same logic works for both absolute and relative path.
         prefix_len: int = (
-            len(str(self.__path))
+            len(str(self.__path.absolute()))
             # Extra 1 is for separator `/` between prefix and filename
             + 1
         )
 
         for parent, _, files in self.__path.walk():
             for filename in files:
-                yield str(parent / filename)[prefix_len:]
+                yield str((parent / filename).absolute())[prefix_len:]
 
     @override
     def clear(self) -> None:
