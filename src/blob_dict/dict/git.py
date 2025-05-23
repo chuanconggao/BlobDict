@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
-from typing import Any, override
+from typing import Any, Literal, MutableMapping, override
 
 from extratools_git.repo import Repo
 
@@ -94,6 +94,27 @@ class GitBlobDict(PathBlobDict):
                         yield str((parent / filename).relative_to(self.__repo_path))
             else:
                 yield str(child_path.relative_to(self.__repo_path))
+
+    @override
+    def clear(self) -> None:
+        # We want to depend on `MutableMapping`'s default implementation based on `__delitem__` here
+        # Otherwise, it will depend on `PathBlobDict`'s own implementation and will skip Git update
+        #
+        # Note that each deleted item will create one commit
+        MutableMapping.clear(self)
+
+    @override
+    def pop[T](
+        self,
+        key: str,
+        /,
+        default: BytesBlob | T | Literal['__DEFAULT'] = "__DEFAULT",
+    ) -> BytesBlob | T:
+        # We want to depend on `MutableMapping`'s default implementation based on `__delitem__` here
+        # Otherwise, it will depend on `PathBlobDict`'s own implementation and will skip Git update
+        if default == "__DEFAULT":
+            return MutableMapping.pop(self, key)
+        return MutableMapping.pop(self, key, default)
 
     @override
     def __delitem__(self, key: str, /) -> None:
