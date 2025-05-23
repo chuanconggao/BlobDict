@@ -3,7 +3,7 @@ from abc import abstractmethod
 from collections.abc import Iterator
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Any, Protocol, override
+from typing import Any, Literal, Protocol, override
 
 from extratools_core.typing import PathLike
 
@@ -54,8 +54,8 @@ class PathBlobDict(BlobDictBase):
         self.__path.rmtree()
 
     @override
-    def __contains__(self, key: str) -> bool:
-        return (self.__path / key).is_file()
+    def __contains__(self, key: object) -> bool:
+        return (self.__path / str(key)).is_file()
 
     def __get_blob_class(self, key: str) -> type[BytesBlob]:  # noqa: PLR0911
         mime_type: str | None
@@ -145,12 +145,23 @@ class PathBlobDict(BlobDictBase):
                 parent.rmdir()
 
     @override
-    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop[T: Any](
+        self,
+        key: str,
+        /,
+        default: BytesBlob | T | Literal["__DEFAULT"] = "__DEFAULT",
+    ) -> BytesBlob | T:
         blob: BytesBlob | None = self.get(key)
         if blob:
             self.__cleanup(key)
 
-        return blob or default
+        if blob is not None:
+            return blob
+
+        if default == "__DEFAULT":
+            raise KeyError
+
+        return default
 
     @override
     def __delitem__(self, key: str, /) -> None:
