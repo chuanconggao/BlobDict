@@ -26,13 +26,16 @@ class ExtraPathLike(PathLike, Protocol):
 class PathBlobDict(BlobDictBase):
     def __init__(
         self,
-        path: ExtraPathLike,
+        path: ExtraPathLike | None = None,
         *,
         compression: bool = False,
         blob_class: type[BytesBlob] = BytesBlob,
         blob_class_args: dict[str, Any] | None = None,
     ) -> None:
         super().__init__()
+
+        if path is None:
+            path = LocalPath(".")
 
         if isinstance(path, Path):
             path = path.expanduser()

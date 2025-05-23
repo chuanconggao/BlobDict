@@ -11,7 +11,7 @@ from .path import LocalPath, PathBlobDict
 class GitBlobDict(PathBlobDict):
     def __init__(
         self,
-        path: LocalPath,
+        path: LocalPath | None = None,
         *,
         user_name: str,
         user_email: str,
@@ -19,6 +19,9 @@ class GitBlobDict(PathBlobDict):
         use_remote_frequence: timedelta = timedelta(minutes=1),
         **kwargs: Any,
     ) -> None:
+        if path is None:
+            path = LocalPath(".")
+
         self.__repo_path: LocalPath = path.expanduser()
 
         self.__repo: Repo = Repo.init(
