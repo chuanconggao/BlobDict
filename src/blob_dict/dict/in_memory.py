@@ -1,6 +1,6 @@
 from collections.abc import Iterator, MutableMapping
 from datetime import timedelta
-from typing import override
+from typing import Any, Literal, override
 
 from ttl_dict import TTLDict
 
@@ -35,11 +35,16 @@ class InMemoryBlobDict(BlobDictBase):
         return len(self.__dict)
 
     @override
-    def __contains__(self, key: str) -> bool:
-        return key in self.__dict
+    def __contains__(self, key: Any) -> bool:
+        return str(key) in self.__dict
 
     @override
-    def get(self, key: str, /, default: BytesBlob | None) -> BytesBlob | None:
+    def get[T: Any](
+        self,
+        key: str,
+        /,
+        default: BytesBlob | T = None,
+    ) -> BytesBlob | T:
         return self.__dict.get(key, default)
 
     @override
@@ -57,7 +62,15 @@ class InMemoryBlobDict(BlobDictBase):
         self.__dict.clear()
 
     @override
-    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop[T: Any](
+        self,
+        key: str,
+        /,
+        default: BytesBlob | T | Literal["__DEFAULT"] = "__DEFAULT",
+    ) -> BytesBlob | T:
+        if default == "__DEFAULT":
+            return self.__dict.pop(key)
+
         return self.__dict.pop(key, default)
 
     @override
