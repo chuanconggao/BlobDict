@@ -95,7 +95,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "cloudpathlib", extras = ["s3"], marker = "extra == 's3'", specifier = ">=0.21.0" },
-    { name = "extratools-core", specifier = ">=0.1.8" },
+    { name = "extratools-core", specifier = ">=0.1.16" },
     { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.3" },
     { name = "extratools-image", marker = "extra == 'image'", specifier = ">=0.1.6" },
     { name = "moviepy", marker = "extra == 'audio'", specifier = ">=1.0.3" },
@@ -303,14 +303,14 @@ wheels = [
 
 [[package]]
 name = "extratools-core"
-version = "0.1.12"
+version = "0.1.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "toolz" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/94/a8/ca9b65adf44c4947d7bd4b7755173b5590d343b05cdd0da1cb60516a8ce2/extratools_core-0.1.12.tar.gz", hash = "sha256:dff67810b27d3127a2275a74350333275a94c49684fce201370bcd08f7d812c5", size = 94352, upload-time = "2025-05-21T12:57:01.673Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/ea/af323cbe8ef7e980ddc14b5bafcba6a893224e3ac2fd04dc17b91eacf8b1/extratools_core-0.1.16.tar.gz", hash = "sha256:d0b713c0cedc604d8d06438332855b10e5ff562fd671bf97d4176a4960484263", size = 99270, upload-time = "2025-05-23T09:47:53.136Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/42/28/037ddf3fb42c7ae08b90e756e01c37a64360a585c9d8078cefcbe115f10b/extratools_core-0.1.12-py3-none-any.whl", hash = "sha256:20f02bfa694bd7b514aa6679623ae1b67458731585cee2b940798da2eb221083", size = 20318, upload-time = "2025-05-21T12:56:59.957Z" },
+    { url = "https://files.pythonhosted.org/packages/77/5b/927c5cf390c4b155fd14f3ef2c750bb1bed4f724c40dde775c7a159083b1/extratools_core-0.1.16-py3-none-any.whl", hash = "sha256:3de46324265cb451ad80211012d57c7282cc5dabab1d50dc5a16eeca3f2f5c3b", size = 22051, upload-time = "2025-05-23T09:47:51.995Z" },
 ]
 
 [[package]]
