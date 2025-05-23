@@ -104,7 +104,7 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "simple-zstd", specifier = ">=0.1.0" },
     { name = "soundfile", marker = "extra == 'audio'", specifier = ">=0.13.1" },
-    { name = "time-to-live-dict", specifier = ">=0.1.1" },
+    { name = "time-to-live-dict", specifier = ">=0.1.4" },
     { name = "valkey", extras = ["libvalkey"], marker = "extra == 'valkey'", specifier = ">=6.1.0" },
 ]
 provides-extras = ["image", "s3", "valkey", "audio", "video", "git"]
@@ -978,11 +978,11 @@ wheels = [
 
 [[package]]
 name = "time-to-live-dict"
-version = "0.1.3"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e4/a6/38c1365e074e234925df664fe6b7ec1e6520d1086b10753fe17c5f734900/time_to_live_dict-0.1.3.tar.gz", hash = "sha256:e2b8a84d23e41d97656d7373ac85a9970dc92784d15bc1514df2d89e9e09a151", size = 43407, upload-time = "2025-03-23T01:57:53.032Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/16/a3/c954b055ec5c4cc8368f97c53fcdf76c19150d0cb824bf49f11d62029172/time_to_live_dict-0.1.4.tar.gz", hash = "sha256:5dc6ed5ae6c1004037996aa77f296115cc9d8fdd345e04d65a0e57a6c348c6e8", size = 43236, upload-time = "2025-05-23T14:59:00.097Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/d7/e3a9d6e373b0bba2e67243dc53f9725bf7765aa63805e2a74169da3a44e3/time_to_live_dict-0.1.3-py3-none-any.whl", hash = "sha256:f01967d1ec7f84df53681e9b0e84465a7a05992212f3599d456ea4223dc0ad50", size = 4067, upload-time = "2025-03-23T01:57:51.902Z" },
+    { url = "https://files.pythonhosted.org/packages/01/ce/a596145034bc0b6211ff6d0a37a8375ed0424d584f17757082680e273a99/time_to_live_dict-0.1.4-py3-none-any.whl", hash = "sha256:6797ba94cefb79134d08423d87366c2d7d4e5ced1493848cee9a0fc7e2963140", size = 3957, upload-time = "2025-05-23T14:58:59.114Z" },
 ]
 
 [[package]]

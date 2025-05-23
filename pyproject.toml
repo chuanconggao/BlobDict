@@ -9,7 +9,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "pyyaml>=6.0.2",
     "simple-zstd>=0.1.0",
-    "time-to-live-dict>=0.1.1",
+    "time-to-live-dict>=0.1.4",
 ]
 
 [project.optional-dependencies]
