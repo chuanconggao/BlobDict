@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 from datetime import timedelta
-from typing import Any, cast, override
+from typing import Any, Literal, cast, override
 
 from valkey import Valkey
 
@@ -32,11 +32,11 @@ class ValkeyBlobDict(BlobDictBase):
         return cast("int", self.__client.dbsize())
 
     @override
-    def __contains__(self, key: str) -> bool:
-        return cast("int", self.__client.exists(key)) == 1
+    def __contains__(self, key: object) -> bool:
+        return cast("int", self.__client.exists(str(key))) == 1
 
     @override
-    def get(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
+    def get[T: Any](self, key: str, /, default: BytesBlob | T = None) -> BytesBlob | T:
         response: Any = self.__client.get(key)
         if not response:
             return default
@@ -65,10 +65,18 @@ class ValkeyBlobDict(BlobDictBase):
         self.__client.flushdb()
 
     @override
-    def pop(self, key: str, /, default: BytesBlob | None = None) -> BytesBlob | None:
+    def pop[T: Any](
+        self,
+        key: str,
+        /,
+        default: BytesBlob | T | Literal["__DEFAULT"] = "__DEFAULT",
+    ) -> BytesBlob | T:
         if response := self.get(key):
             self.__client.delete(key)
             return response
+
+        if default == "__DEFAULT":
+            raise KeyError
 
         return default
 
