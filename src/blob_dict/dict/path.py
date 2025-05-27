@@ -5,6 +5,7 @@ from mimetypes import guess_type
 from pathlib import Path
 from typing import Any, Literal, Protocol, override
 
+from extratools_core.path import rm_with_empty_parents
 from extratools_core.typing import PathLike
 
 from ..blob import BytesBlob, StrBlob
@@ -138,14 +139,7 @@ class PathBlobDict(BlobDictBase):
                 (parent / dirname).rmdir()
 
     def __cleanup(self, key: str) -> None:
-        (self.__path / key).unlink()
-
-        for parent in (self.__path / key).parents:
-            if parent == self.__path:
-                return
-
-            if parent.is_dir() and next(iter(parent.iterdir()), None) is None:
-                parent.rmdir()
+        rm_with_empty_parents(self.__path / key, stop=self.__path)
 
     @override
     def pop[T: Any](
