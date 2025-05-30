@@ -1,6 +1,6 @@
-from collections.abc import Iterator
+from collections.abc import Iterator, MutableMapping
 from datetime import UTC, datetime, timedelta
-from typing import Any, Literal, MutableMapping, override
+from typing import Any, Literal, override
 
 from extratools_git.repo import Repo
 
