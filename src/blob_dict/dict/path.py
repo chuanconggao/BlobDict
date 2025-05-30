@@ -1,9 +1,10 @@
 import shutil
 from abc import abstractmethod
 from collections.abc import Iterator
+from datetime import UTC, datetime, timedelta
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Any, Literal, Protocol, override
+from typing import Any, Literal, Protocol, cast, override
 
 from extratools_core.path import rm_with_empty_parents
 from extratools_core.typing import PathLike
@@ -30,6 +31,7 @@ class PathBlobDict(BlobDictBase):
         path: ExtraPathLike | None = None,
         *,
         compression: bool = False,
+        ttl: timedelta | None = None,
         blob_class: type[BytesBlob] = BytesBlob,
         blob_class_args: dict[str, Any] | None = None,
     ) -> None:
@@ -45,6 +47,13 @@ class PathBlobDict(BlobDictBase):
 
         self.__compression: bool = compression
 
+        # Note that we do not automatically cleanup by TTL for reasons below:
+        # - It is tricky to do so for local path without CRON job or daemon process
+        # - Multiple objects could actually use same directory with different TTLs
+        # Thus, it is best to depend on native solution for cleanup by TTL,
+        # like S3's object lifecycle management.
+        self.__ttl: timedelta | None = ttl
+
         self.__blob_class: type[BytesBlob] = blob_class
         self.__blob_class_args: dict[str, Any] = blob_class_args or {}
 
@@ -57,9 +66,24 @@ class PathBlobDict(BlobDictBase):
     def delete(self) -> None:
         self.__path.rmtree()
 
+    def __is_expired(self, key_path: PathLike) -> bool:
+        return (
+            datetime.now(UTC)
+            - datetime.fromtimestamp(key_path.stat().st_mtime, UTC)
+            > cast("timedelta", self.__ttl)
+        )
+
     @override
     def __contains__(self, key: object) -> bool:
-        return (self.__path / str(key)).is_file()
+        key_path: PathLike = self.__path / str(key)
+
+        return (
+            key_path.is_file()
+            and (
+                not self.__ttl
+                or not self.__is_expired(key_path)
+            )
+        )
 
     def __get_blob_class(self, key: str) -> type[BytesBlob]:  # noqa: PLR0911
         mime_type: str | None
@@ -128,7 +152,11 @@ class PathBlobDict(BlobDictBase):
 
         for parent, _, files in self.__path.walk():
             for filename in files:
-                yield str((parent / filename).absolute())[prefix_len:]
+                key_path: PathLike = parent / filename
+                if self.__ttl and self.__is_expired(key_path):
+                    continue
+
+                yield str(key_path.absolute())[prefix_len:]
 
     @override
     def clear(self) -> None:
