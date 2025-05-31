@@ -1,29 +1,25 @@
 from __future__ import annotations
 
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 from typing import Self, override
 
 from moviepy.editor import VideoClip, VideoFileClip
 
 from . import BytesBlob
+from .audio_video import read_from_clip
 
 
 class VideoBlob(BytesBlob):
-    def __init__(self, blob: bytes | VideoClip) -> None:
+    def __init__(
+        self,
+        blob: bytes | VideoClip,
+    ) -> None:
         if isinstance(blob, VideoClip):
-            if (
-                isinstance(blob, VideoFileClip)
-                and blob.filename.lower().endswith(".mp4")
-            ):
-                blob = Path(blob.filename).read_bytes()
-            else:
-                with NamedTemporaryFile(suffix=".mp4", delete_on_close=False) as f:
-                    blob.write_videofile(f.name)
-
-                    f.close()
-
-                    blob = Path(f.name).read_bytes()
+            blob = read_from_clip(
+                blob,
+                ".mp4",
+                delete_temp_clip_file=delete_temp_clip_file,
+            )
 
         super().__init__(blob)
 
