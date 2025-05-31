@@ -1,5 +1,5 @@
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, gettempdir
 
 from moviepy.audio.AudioClip import AudioClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
@@ -38,5 +38,12 @@ def read_from_clip(
             f.close()
 
             data = Path(f.name).read_bytes()
+
+    if (
+        delete_temp_clip_file
+        and clip_file
+        and clip_file.is_relative_to(gettempdir())
+    ):
+        clip_file.unlink()
 
     return data

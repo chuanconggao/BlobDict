@@ -24,6 +24,8 @@ class AudioBlob(BytesBlob):
     def __init__(
         self,
         blob: bytes | AudioClip | AudioData,
+        *,
+        delete_temp_clip_file: bool = False,
     ) -> None:
         if isinstance(blob, AudioClip):
             blob = read_from_clip(

@@ -13,6 +13,8 @@ class VideoBlob(BytesBlob):
     def __init__(
         self,
         blob: bytes | VideoClip,
+        *,
+        delete_temp_clip_file: bool = False,
     ) -> None:
         if isinstance(blob, VideoClip):
             blob = read_from_clip(
