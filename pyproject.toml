@@ -23,11 +23,11 @@ valkey = [
     "valkey[libvalkey]>=6.1.0",
 ]
 audio = [
-    "moviepy>=1.0.3",
+    "moviepy>=2.0.0",
     "soundfile>=0.13.1",
 ]
 video = [
-    "moviepy>=1.0.3",
+    "moviepy>=2.0.0",
 ]
 git = [
     "extratools-git>=0.1.3",

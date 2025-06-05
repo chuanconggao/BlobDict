@@ -3,7 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self, override
 
-from moviepy.editor import VideoClip, VideoFileClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.VideoClip import VideoClip
 
 from . import BytesBlob
 from .audio_video import read_from_clip
