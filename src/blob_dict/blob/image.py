@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Self, override
 
-from extratools_image import bytes_to_image, image_to_bytes
 from PIL.Image import Image
+from extratools_image import bytes_to_image, image_to_bytes
 
 from . import BytesBlob
 

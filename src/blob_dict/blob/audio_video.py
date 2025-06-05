@@ -3,8 +3,8 @@ from tempfile import NamedTemporaryFile, gettempdir
 
 from moviepy.audio.AudioClip import AudioClip
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.VideoClip import VideoClip
+from moviepy.video.io.VideoFileClip import VideoFileClip
 
 
 def read_from_clip(
