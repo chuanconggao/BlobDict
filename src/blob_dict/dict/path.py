@@ -11,7 +11,7 @@ from extratools_core.typing import PathLike
 
 from ..blob import BytesBlob, StrBlob
 from ..blob.json import JsonDictBlob, YamlDictBlob
-from . import BlobDictBase
+from . import MutableBlobDictBase
 
 
 class LocalPath(Path):
@@ -25,7 +25,7 @@ class ExtraPathLike(PathLike, Protocol):
         ...
 
 
-class PathBlobDict(BlobDictBase):
+class PathBlobDict(MutableBlobDictBase):
     def __init__(
         self,
         path: ExtraPathLike | None = None,

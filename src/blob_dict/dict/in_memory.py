@@ -5,10 +5,10 @@ from typing import Any, Literal, override
 from ttl_dict import TTLDict
 
 from ..blob import BytesBlob
-from . import BlobDictBase
+from . import MutableBlobDictBase
 
 
-class InMemoryBlobDict(BlobDictBase):
+class InMemoryBlobDict(MutableBlobDictBase):
     __EXTERNAL_DICT_TTL_ERROR_MESSAGE: str = "Cannot specify `ttl` for external `data_dict`"
 
     def __init__(

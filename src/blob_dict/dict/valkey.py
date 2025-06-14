@@ -5,10 +5,10 @@ from typing import Any, Literal, cast, override
 from valkey import Valkey
 
 from ..blob import BytesBlob, StrBlob
-from . import BlobDictBase
+from . import MutableBlobDictBase
 
 
-class ValkeyBlobDict(BlobDictBase):
+class ValkeyBlobDict(MutableBlobDictBase):
     def __init__(
         self,
         *,

@@ -2,18 +2,18 @@ from collections.abc import Iterator
 from typing import Any, Literal, override
 
 from ..blob import BytesBlob
-from . import BlobDictBase
+from . import MutableBlobDictBase
 
 
-class MultiReplicaBlobDict(BlobDictBase):
+class MultiReplicaBlobDict(MutableBlobDictBase):
     def __init__(
         self,
-        replica_dicts: dict[str, BlobDictBase],
+        replica_dicts: dict[str, MutableBlobDictBase],
     ) -> None:
         super().__init__()
 
-        self.__replica_dicts: dict[str, BlobDictBase] = replica_dicts
-        self.__primary_dict: BlobDictBase = next(iter(replica_dicts.values()))
+        self.__replica_dicts: dict[str, MutableBlobDictBase] = replica_dicts
+        self.__primary_dict: MutableBlobDictBase = next(iter(replica_dicts.values()))
 
     @override
     def __len__(self) -> int:
@@ -60,7 +60,7 @@ class MultiReplicaBlobDict(BlobDictBase):
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
-            replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
+            replica_dict: MutableBlobDictBase = self.__replica_dicts[replica_name]
             blob: BytesBlob | None
             if blob := replica_dict.get(key):
                 return blob
@@ -103,7 +103,7 @@ class MultiReplicaBlobDict(BlobDictBase):
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
-            replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
+            replica_dict: MutableBlobDictBase = self.__replica_dicts[replica_name]
             replica_dict.clear()
 
     @override
@@ -120,7 +120,7 @@ class MultiReplicaBlobDict(BlobDictBase):
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
-            replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
+            replica_dict: MutableBlobDictBase = self.__replica_dicts[replica_name]
             if (blob := replica_dict.pop(key, None)) and not final_blob:
                 final_blob = blob
 
@@ -152,5 +152,5 @@ class MultiReplicaBlobDict(BlobDictBase):
             self.__replica_dicts.keys() if replica_names is None
             else replica_names
         ):
-            replica_dict: BlobDictBase = self.__replica_dicts[replica_name]
+            replica_dict: MutableBlobDictBase = self.__replica_dicts[replica_name]
             replica_dict[key] = blob
