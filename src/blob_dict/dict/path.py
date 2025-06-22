@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Literal, Protocol, cast, override
 
 from extratools_core.path import rm_with_empty_parents
-from extratools_core.typing import PathLike
+from extratools_core.typing import PathLike, SearchableMapping
 
 from ..blob import BytesBlob, StrBlob
 from ..blob.json import JsonDictBlob, YamlDictBlob
@@ -25,7 +25,7 @@ class ExtraPathLike(PathLike, Protocol):
         ...
 
 
-class PathBlobDict(MutableBlobDictBase):
+class PathBlobDict(MutableBlobDictBase, SearchableMapping[str, BytesBlob]):
     def __init__(
         self,
         path: ExtraPathLike | None = None,
@@ -44,6 +44,16 @@ class PathBlobDict(MutableBlobDictBase):
             path = path.expanduser()
 
         self.__path: ExtraPathLike = path
+
+        # The concept of relative path does not exist for `CloudPath`,
+        # and each walked path is always absolute for `CloudPath`.
+        # Therefore, we extract each key by removing the path prefix.
+        # In this way, the same logic works for both absolute and relative path.
+        self.__prefix_len: int = (
+            len(str(self.__path.absolute()))
+            # Extra 1 is for separator `/` between prefix and filename
+            + 1
+        )
 
         self.__compression: bool = compression
 
@@ -138,25 +148,24 @@ class PathBlobDict(MutableBlobDictBase):
 
         return self._get(key, (self.__path / key).read_bytes())
 
+    def __path_to_str(self, path: ExtraPathLike) -> str:
+        return str(path.absolute())[self.__prefix_len:]
+
     @override
     def __iter__(self) -> Iterator[str]:
-        # The concept of relative path does not exist for `CloudPath`,
-        # and each walked path is always absolute for `CloudPath`.
-        # Therefore, we extract each key by removing the path prefix.
-        # In this way, the same logic works for both absolute and relative path.
-        prefix_len: int = (
-            len(str(self.__path.absolute()))
-            # Extra 1 is for separator `/` between prefix and filename
-            + 1
-        )
-
         for parent, _, files in self.__path.walk():
             for filename in files:
                 key_path: PathLike = parent / filename
                 if self.__ttl and self.__is_expired(key_path):
                     continue
 
-                yield str(key_path.absolute())[prefix_len:]
+                yield self.__path_to_str(key_path)
+
+    @override
+    def search(self, filter_body: str | None = None) -> Iterator[str]:
+        for key_path in self.__path.glob(filter_body or "**"):
+            if key_path.is_file():
+                yield self.__path_to_str(key_path)
 
     @override
     def clear(self) -> None:
