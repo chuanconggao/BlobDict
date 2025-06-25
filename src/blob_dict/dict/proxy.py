@@ -8,7 +8,7 @@ from ..blob import BytesBlob
 from . import MutableBlobDictBase
 
 
-class InMemoryBlobDict(MutableBlobDictBase):
+class ProxyBlobDict(MutableBlobDictBase):
     __EXTERNAL_DICT_TTL_ERROR_MESSAGE: str = "Cannot specify `ttl` for external `data_dict`"
 
     def __init__(
@@ -20,7 +20,7 @@ class InMemoryBlobDict(MutableBlobDictBase):
         super().__init__()
 
         if data_dict is not None and ttl is not None:
-            raise ValueError(InMemoryBlobDict.__EXTERNAL_DICT_TTL_ERROR_MESSAGE)
+            raise ValueError(ProxyBlobDict.__EXTERNAL_DICT_TTL_ERROR_MESSAGE)
 
         self.__dict: MutableMapping[str, BytesBlob] = (
             (
