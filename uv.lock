@@ -57,11 +57,11 @@ name = "blob-dict"
 version = "0.1.15"
 source = { editable = "." }
 dependencies = [
+    { name = "cachetools" },
     { name = "extratools-core" },
     { name = "pydantic" },
     { name = "pyyaml" },
     { name = "simple-zstd" },
-    { name = "time-to-live-dict" },
 ]
 
 [package.optional-dependencies]
@@ -94,6 +94,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cachetools", specifier = ">=6.1.0" },
     { name = "cloudpathlib", extras = ["s3"], marker = "extra == 's3'", specifier = ">=0.21.0" },
     { name = "extratools-core", specifier = ">=0.1.28" },
     { name = "extratools-git", marker = "extra == 'git'", specifier = ">=0.1.3" },
@@ -104,7 +105,6 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "simple-zstd", specifier = ">=0.1.0" },
     { name = "soundfile", marker = "extra == 'audio'", specifier = ">=0.13.1" },
-    { name = "time-to-live-dict", specifier = ">=0.1.4" },
     { name = "valkey", extras = ["libvalkey"], marker = "extra == 'valkey'", specifier = ">=6.1.0" },
 ]
 provides-extras = ["image", "s3", "valkey", "audio", "video", "git"]
@@ -142,6 +142,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/87/c6/61fa4699aa7f6230cf018d110849388904493b4e179050b6f0fc20a0f353/botocore-1.38.20.tar.gz", hash = "sha256:03a5027a207fc66cd0bf8cd1abb98db41fd4d23e6bd5f43f68586af9736240fc", size = 13899574, upload-time = "2025-05-20T23:12:44.883Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e2/be/f0eb1d687ca841f9a8cf6077340123ade5069984121b67e0709b3a368851/botocore-1.38.20-py3-none-any.whl", hash = "sha256:70feba9b3f73946a9739d0c16703190d79379f065cf6e29883b5d7f791b247b8", size = 13558776, upload-time = "2025-05-20T23:12:39.685Z" },
+]
+
+[[package]]
+name = "cachetools"
+version = "6.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/89/817ad5d0411f136c484d535952aef74af9b25e0d99e90cdffbe121e6d628/cachetools-6.1.0.tar.gz", hash = "sha256:b4c4f404392848db3ce7aac34950d17be4d864da4b8b66911008e430bc544587", size = 30714, upload-time = "2025-06-16T18:51:03.07Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/00/f0/2ef431fe4141f5e334759d73e81120492b23b2824336883a91ac04ba710b/cachetools-6.1.0-py3-none-any.whl", hash = "sha256:1c7bb3cf9193deaf3508b7c5f2a79986c13ea38965c5adcff1f84519cf39163e", size = 11189, upload-time = "2025-06-16T18:51:01.514Z" },
 ]
 
 [[package]]
@@ -937,15 +946,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/28/e3/55dcc2cfbc3ca9c29519eb6884dd1415ecb53b0e934862d3559ddcb7e20b/stack_data-0.6.3.tar.gz", hash = "sha256:836a778de4fec4dcd1dcd89ed8abff8a221f58308462e1c4aa2a3cf30148f0b9", size = 44707, upload-time = "2023-09-30T13:58:05.479Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/7b/ce1eafaf1a76852e2ec9b22edecf1daa58175c090266e9f6c64afcd81d91/stack_data-0.6.3-py3-none-any.whl", hash = "sha256:d5558e0c25a4cb0853cddad3d77da9891a08cb85dd9f9f91b9f8cd66e511e695", size = 24521, upload-time = "2023-09-30T13:58:03.53Z" },
-]
-
-[[package]]
-name = "time-to-live-dict"
-version = "0.1.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/16/a3/c954b055ec5c4cc8368f97c53fcdf76c19150d0cb824bf49f11d62029172/time_to_live_dict-0.1.4.tar.gz", hash = "sha256:5dc6ed5ae6c1004037996aa77f296115cc9d8fdd345e04d65a0e57a6c348c6e8", size = 43236, upload-time = "2025-05-23T14:59:00.097Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/01/ce/a596145034bc0b6211ff6d0a37a8375ed0424d584f17757082680e273a99/time_to_live_dict-0.1.4-py3-none-any.whl", hash = "sha256:6797ba94cefb79134d08423d87366c2d7d4e5ced1493848cee9a0fc7e2963140", size = 3957, upload-time = "2025-05-23T14:58:59.114Z" },
 ]
 
 [[package]]

@@ -1,8 +1,9 @@
+import sys
 from collections.abc import Iterator, MutableMapping
 from datetime import timedelta
 from typing import Any, Literal, override
 
-from ttl_dict import TTLDict
+from cachetools import TTLCache
 
 from ..blob import BytesBlob
 from . import MutableBlobDictBase
@@ -25,7 +26,7 @@ class ProxyBlobDict(MutableBlobDictBase):
         self.__dict: MutableMapping[str, BytesBlob] = (
             (
                 {} if ttl is None
-                else TTLDict[str, BytesBlob](ttl)
+                else TTLCache[str, BytesBlob](sys.maxsize, ttl.total_seconds())
             ) if data_dict is None
             else data_dict
         )
