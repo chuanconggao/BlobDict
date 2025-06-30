@@ -1,4 +1,3 @@
-import shutil
 from abc import abstractmethod
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
@@ -6,17 +5,12 @@ from mimetypes import guess_type
 from pathlib import Path
 from typing import Any, Literal, Protocol, cast, override
 
-from extratools_core.path import rm_with_empty_parents
+from extratools_core.path import LocalPath, rm_with_empty_parents
 from extratools_core.typing import PathLike, SearchableMapping
 
 from ..blob import BytesBlob, StrBlob
 from ..blob.json import JsonDictBlob, YamlDictBlob
 from . import MutableBlobDictBase
-
-
-class LocalPath(Path):
-    def rmtree(self) -> None:
-        shutil.rmtree(self)
 
 
 class ExtraPathLike(PathLike, Protocol):
